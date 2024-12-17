@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
+from django.db.models import F
 
 from books.models import Book
 from books.serializers import BookSerializer
@@ -29,9 +30,7 @@ class BookGenericViewSet(
 
     @action(detail=True, methods=['post'])
     def buy(self, request, pk=None):
-        book = self.get_object()
-        if book.count > 0:
-            book.count -= 1
-            book.save()
+        updated = Book.objects.filter(pk=pk, count__gt=0).update(count=F('count') - 1)
+        if updated:
             return Response({'status': 'Book purchased'}, status=status.HTTP_200_OK)
         return Response({'error': 'The books are out'}, status=status.HTTP_400_BAD_REQUEST)
