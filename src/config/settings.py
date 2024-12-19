@@ -11,9 +11,19 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from os import getenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+POSTGRES_DB = getenv('POSTGRES_DB', 'bookstore')
+POSTGRES_USER = getenv('POSTGRES_USER', 'admin')
+POSTGRES_PASSWORD = getenv('POSTGRES_PASSWORD', 'admin')
+POSTGRES_HOST = getenv('POSTGRES_HOST', 'postgres')
+POSTGRES_PORT = getenv('POSTGRES_PORT', 5432)
+
+REDIS_HOST = getenv('REDIS_HOST', 'localhost')
+REDIS_PORT = getenv('REDIS_PORT', 6379)
 
 
 # Quick-start development settings - unsuitable for production
@@ -87,14 +97,20 @@ DATABASES = {
     # }
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'bookstore',
-        'USER': 'admin',
-        'PASSWORD': 'admin',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': POSTGRES_DB,
+        'USER': POSTGRES_USER,
+        'PASSWORD': POSTGRES_PASSWORD,
+        'HOST': POSTGRES_HOST,
+        'PORT': POSTGRES_PORT,
     }
 }
 
+CACHES = {
+    'default': {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        'LOCATION': f'redis://{REDIS_HOST}:{REDIS_PORT}/1',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

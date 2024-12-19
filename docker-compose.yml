@@ -9,3 +9,27 @@ services:
       POSTGRES_DB: bookstore
     ports:
       - "5432:5432"
+
+  redis:
+    image: "redis:latest"
+    ports:
+      - "6379:6379"
+
+  # bookstore:
+  #   build: .
+  #   command: sh -c "python src/manage.py migrate && python src/manage.py runserver 0.0.0.0:8000"
+  #   volumes:
+  #     - .:/code
+  #   ports:
+  #     - "8000:8000"
+  #   depends_on:
+  #     - postgres
+  #     - redis
+  #   environment:
+  #     - REDIS_HOST=redis
+  #     - REDIS_PORT=6379
+  #     - POSTGRES_DB=bookstore
+  #     - POSTGRES_USER=admin
+  #     - POSTGRES_PASSWORD=admin
+  #     - POSTGRES_HOST=postgres
+  #     - POSTGRES_PORT=5432
